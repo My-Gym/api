@@ -4,7 +4,6 @@ import { ExercisesService } from './exercises.service';
 import { Exercise } from './exercises.model';
 import { BodyCreateExerciseDto } from './dto/create-exercise.dto';
 import { Roles } from '../roles/roles.decorator';
-import { UsersService } from '../users/users.service';
 
 @Controller('exercises')
 export class ExercisesController {
