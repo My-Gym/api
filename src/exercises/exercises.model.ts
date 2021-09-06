@@ -71,9 +71,9 @@ export class Exercise extends Model<Exercise, ExerciseCreationAttrs> {
   @BelongsTo(() => User)
   author: User;
 
-  @HasMany(() => Workout)
+  @HasMany(() => Workout, { onDelete: 'cascade' })
   workouts: Workout[];
 
-  @HasMany(() => ExContent)
+  @HasMany(() => ExContent, { onDelete: 'cascade' })
   contents: ExContent[];
 }

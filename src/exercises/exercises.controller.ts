@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
+  Param,
   Post,
   Query,
   UploadedFiles,
@@ -22,6 +24,20 @@ export class ExercisesController {
     private exercisesService: ExercisesService,
     private filesService: FilesService,
   ) {}
+
+  @ApiOperation({ summary: 'Getting a exercises' })
+  @ApiResponse({ status: HttpStatus.OK, type: [Exercise] })
+  @Get()
+  getAll(): Promise<Exercise[]> {
+    return this.exercisesService.getAll();
+  }
+
+  @ApiOperation({ summary: 'Getting the exercise by ID' })
+  @ApiResponse({ status: HttpStatus.OK, type: Exercise })
+  @Get('/:id')
+  getById(@Param('id') id: number): Promise<Exercise> {
+    return this.exercisesService.getById(id);
+  }
 
   @ApiOperation({ summary: 'Creating a exercise' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Exercise })

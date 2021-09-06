@@ -21,8 +21,24 @@ export class ExercisesService {
     @InjectConnection() private connect: Sequelize,
   ) {}
 
+  async getAll(): Promise<Exercise[]> {
+    return this.exerciseRepository.findAll({ include: ExContent });
+  }
+
+  async getById(id: number): Promise<Exercise> {
+    const exercise = await this.exerciseRepository.findOne({
+      where: { id },
+      include: ExContent,
+    });
+
+    if (!exercise) {
+      throw new HttpException('Упражнение не найдено', HttpStatus.NOT_FOUND);
+    }
+
+    return exercise;
+  }
+
   async create(dto: CreateExerciseDto): Promise<Exercise> {
-    console.log('dto.filesData', dto.filesData);
     const user = await this.userService.getByCode(dto.userCode);
     if (!user) {
       throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
@@ -34,7 +50,7 @@ export class ExercisesService {
     }
 
     const transaction = await this.connect.transaction();
-    console.log(dto.filesData);
+
     try {
       const exercise = await this.exerciseRepository.create(
         {
@@ -44,6 +60,8 @@ export class ExercisesService {
         },
         { transaction },
       );
+
+      // await exercise.getExContent();
 
       const contentData = dto.filesData.map((file) => ({
         ...file,
