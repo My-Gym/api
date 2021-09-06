@@ -19,7 +19,8 @@ import { SetsModule } from './sets/sets.module';
 import { SetStrength } from './sets/sets-strength.model';
 import { SetCardio } from './sets/sets-cardio.model';
 import { Workout } from './workouts/workouts.model';
-import { ExContentsModule } from './ex-contents/ex-contents.module';
+import { FilesModule } from './files/files.module';
+import { ExContent } from './exercises/ex-contents.model';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ExContentsModule } from './ex-contents/ex-contents.module';
         Workout,
         SetStrength,
         SetCardio,
+        ExContent,
       ],
       autoLoadModels: true,
     }),
@@ -51,7 +53,7 @@ import { ExContentsModule } from './ex-contents/ex-contents.module';
     ExGroupsModule,
     WorkoutsModule,
     SetsModule,
-    ExContentsModule,
+    FilesModule,
   ],
   providers: [
     {

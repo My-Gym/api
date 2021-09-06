@@ -11,7 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ExGroup } from '../ex-groups/ex-groups.model';
 import { User } from '../users/users.model';
 import { Workout } from '../workouts/workouts.model';
-import { ExContents } from '../ex-contents/ex-contents.model';
+import { ExContent } from './ex-contents.model';
 
 interface ExerciseCreationAttrs {
   title: string;
@@ -74,6 +74,6 @@ export class Exercise extends Model<Exercise, ExerciseCreationAttrs> {
   @HasMany(() => Workout)
   workouts: Workout[];
 
-  @HasMany(() => ExContents)
-  contents: ExContents[];
+  @HasMany(() => ExContent)
+  contents: ExContent[];
 }

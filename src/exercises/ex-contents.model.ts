@@ -7,15 +7,15 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exercise } from '../exercises/exercises.model';
+import { Exercise } from './exercises.model';
+import { FileData } from './dto/create-exercise.dto';
 
-interface ExContentsCreationAttrs {
-  type: string;
-  extension: string;
+interface ExContentsCreationAttrs extends FileData {
+  exerciseId: number;
 }
 
 @Table({ tableName: 'ex-contents' })
-export class ExContents extends Model<ExContents, ExContentsCreationAttrs> {
+export class ExContent extends Model<ExContent, ExContentsCreationAttrs> {
   @ApiProperty({ example: '1', description: 'Unique ID' })
   @Column({
     type: DataType.INTEGER,

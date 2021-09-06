@@ -11,10 +11,18 @@ import { Workout } from '../workouts/workouts.model';
 import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/roles.model';
 import { UsersRoles } from '../users/users-roles.model';
+import { ExContent } from './ex-contents.model';
+import { FilesService } from '../files/files.service';
 
 @Module({
   controllers: [ExercisesController],
-  providers: [ExercisesService, ExGroupsService, UsersService, RolesService],
+  providers: [
+    ExercisesService,
+    ExGroupsService,
+    UsersService,
+    RolesService,
+    FilesService,
+  ],
   imports: [
     SequelizeModule.forFeature([
       Exercise,
@@ -23,6 +31,7 @@ import { UsersRoles } from '../users/users-roles.model';
       Workout,
       Role,
       UsersRoles,
+      ExContent,
     ]),
   ],
 })
