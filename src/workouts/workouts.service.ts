@@ -60,7 +60,7 @@ export class WorkoutsService {
     });
   }
 
-  async getPersonal(workoutId: number, userId: number): Promise<Workout> {
+  async findOnePersonal(workoutId: number, userId: number): Promise<Workout> {
     const workout = await this.workoutRepository.findOne({
       where: {
         userId,
@@ -78,8 +78,8 @@ export class WorkoutsService {
 
   async addSets(dto: CreateWorkoutSetsDto): Promise<Workout> {
     const user = await this.userService.getByCode(dto.userCode);
-    console.log(dto.workoutId, user.id);
-    const workout = await this.getPersonal(dto.workoutId, user.id);
+
+    const workout = await this.findOnePersonal(dto.workoutId, user.id);
     const preparationSets = dto.sets.map((set) => ({
       ...set,
       workoutId: dto.workoutId,
@@ -91,6 +91,15 @@ export class WorkoutsService {
 
     await workout.$add('workoutSets', workoutSets);
 
-    return await this.getPersonal(dto.workoutId, user.id);
+    return await this.findOnePersonal(dto.workoutId, user.id);
+  }
+
+  async findAllPersonal(userCode: string): Promise<Workout[]> {
+    const user = await this.userService.getByCode(userCode);
+
+    return await this.workoutRepository.findAll({
+      where: { userId: user.id },
+      include: WorkoutSet,
+    });
   }
 }

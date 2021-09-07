@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpStatus,
   Param,
   Patch,
@@ -47,5 +48,12 @@ export class WorkoutsController {
     @Query('code') code: string,
   ): Promise<number> {
     return this.workoutService.delete({ workoutId, userCode: code });
+  }
+
+  @ApiOperation({ summary: 'Getting personal workouts' })
+  @ApiResponse({ status: HttpStatus.OK, type: [Workout] })
+  @Get('/get-personal')
+  async getPersonal(@Query('code') code: string): Promise<Workout[]> {
+    return this.workoutService.findAllPersonal(code);
   }
 }
