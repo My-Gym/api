@@ -4,6 +4,7 @@ import {
   Delete,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -30,7 +31,7 @@ export class WorkoutsController {
 
   @ApiOperation({ summary: 'Add a sets' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, type: Workout })
-  @Post('/add-sets')
+  @Patch('/add-sets')
   async addSets(
     @Body() dto: BodyCreateWorkoutSetsDto,
     @Query('code') code: string,
