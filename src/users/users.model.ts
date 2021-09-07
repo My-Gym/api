@@ -13,7 +13,10 @@ import { Exercise } from '../exercises/exercises.model';
 import { Workout } from '../workouts/workouts.model';
 
 interface UserCreationAttrs {
+  firstName: string;
+  lastName: string;
   externalId: number;
+  phone?: number;
   source: string;
   code: string;
 }
@@ -32,6 +35,10 @@ export class User extends Model<User, UserCreationAttrs> {
   @ApiProperty({ example: '1573423', description: 'External ID' })
   @Column({ type: DataType.INTEGER, allowNull: false })
   externalId: number;
+
+  @ApiProperty({ example: 78945612398, description: "User's phone number" })
+  @Column({ type: DataType.INTEGER })
+  phone: number;
 
   @ApiProperty({ example: 'Alexander', description: 'User first name' })
   @Column({ type: DataType.STRING, allowNull: false })

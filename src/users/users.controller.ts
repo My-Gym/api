@@ -9,7 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { BodyCreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './users.model';
 import { Roles } from '../roles/roles.decorator';
@@ -22,8 +22,11 @@ export class UsersController {
   @ApiOperation({ summary: 'Creating a user' })
   @ApiResponse({ status: HttpStatus.CREATED, type: User })
   @Post()
-  async create(@Body() userDto: CreateUserDto) {
-    return await this.usersService.create(userDto);
+  async create(
+    @Body() userDto: BodyCreateUserDto,
+    @Param('code') code: string,
+  ): Promise<User> {
+    return await this.usersService.create({ ...userDto, code });
   }
 
   @ApiOperation({ summary: 'Creating a user' })

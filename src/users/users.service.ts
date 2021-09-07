@@ -8,6 +8,7 @@ import { Role } from '../roles/roles.model';
 import { AddRoleDto } from './dto/add-role.dto';
 import { UsersRoles } from './users-roles.model';
 import { CommonExceptions } from '../exceptions/common.exceptions';
+import { decodeUserCode } from '../utils';
 // import { AddExerciseDto } from './dto/add-exercise.dto';
 
 @Injectable()
@@ -19,21 +20,20 @@ export class UsersService {
     @InjectConnection() private connect: Sequelize,
   ) {}
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<User> {
     const transaction = await this.connect.transaction();
-
+    const [externalId, source] = decodeUserCode(dto.code);
     try {
-      const code = `${dto.externalId}_${dto.source}`;
       const roleUser = await this.roleService.getRoleByValue('USER');
       const roles = [roleUser.id];
 
-      if (dto.externalId === 101271861) {
+      if (Number(externalId) === 101271861) {
         const roleAdmin = await this.roleService.getRoleByValue('ADMIN');
         roles.push(roleAdmin.id);
       }
 
       const user = await this.userRepository.create(
-        { ...dto, code },
+        { ...dto, externalId: Number(externalId), source },
         { transaction },
       );
       await user.$set('roles', roles, { transaction });
