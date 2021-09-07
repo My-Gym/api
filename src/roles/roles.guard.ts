@@ -3,6 +3,7 @@ import * as qs from 'qs';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles.decorator';
 import { RolesService } from './roles.service';
+import { codeUserCode } from '../utils';
 
 export class RolesGuard implements CanActivate {
   constructor(
@@ -25,7 +26,7 @@ export class RolesGuard implements CanActivate {
     const { vk_user_id } = qs.parse(req.headers['x-search-params']);
 
     const usersRole = await this.roleService.getUserRolesByCode(
-      `${vk_user_id}_${req.query.source}`,
+      codeUserCode(Number(vk_user_id), req.query.source),
     );
 
     return usersRole.some((role) => requiredRoles.includes(role.value));

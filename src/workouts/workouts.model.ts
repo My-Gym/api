@@ -10,13 +10,12 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../users/users.model';
 import { Exercise } from '../exercises/exercises.model';
-import { SetStrength } from '../sets/sets-strength.model';
-import { SetCardio } from '../sets/sets-cardio.model';
+import { WorkoutSet } from './workout-sets.model';
 
 interface WorkoutCreationAttrs {
-  title: string;
-  description: string;
-  value: string;
+  date: string;
+  userId: number;
+  exerciseId: number;
 }
 
 @Table({ tableName: 'workouts' })
@@ -48,17 +47,17 @@ export class Workout extends Model<Workout, WorkoutCreationAttrs> {
   @BelongsTo(() => Exercise)
   exercise: Exercise;
 
-  @ForeignKey(() => SetStrength)
-  @Column({ type: DataType.INTEGER })
-  setStrengthId: number;
-
-  @HasMany(() => SetStrength)
-  setsStrength: SetStrength[];
-
-  @ForeignKey(() => SetCardio)
-  @Column({ type: DataType.INTEGER })
-  setCardioId: number;
-
-  @HasMany(() => SetCardio)
-  setsCardio: SetCardio[];
+  @HasMany(() => WorkoutSet, { onDelete: 'cascade' })
+  workoutSets: WorkoutSet[];
 }
+
+/*
+ * 1) Получить user id по code
+ * 2) Создать воркаут согласно WorkoutCreationAttrs
+ * 3) Обработать входные массивы с Sets
+ *
+ * CreateWorkoutDto {
+ *
+ * }
+ *
+ * */

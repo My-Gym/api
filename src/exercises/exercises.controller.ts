@@ -9,7 +9,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ExercisesService } from './exercises.service';
 import { Exercise } from './exercises.model';
 import { BodyCreateExerciseDto, File } from './dto/create-exercise.dto';
@@ -18,6 +18,7 @@ import { FilesService } from '../files/files.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import * as Bluebird from 'bluebird';
 
+@ApiTags('Exercises')
 @Controller('exercises')
 export class ExercisesController {
   constructor(

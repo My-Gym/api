@@ -15,12 +15,10 @@ import { RolesGuard } from './roles/roles.guard';
 import { PlatformGuard } from './guards/platform.guard';
 import { SecurityGuard } from './guards/security.guard';
 import { WorkoutsModule } from './workouts/workouts.module';
-import { SetsModule } from './sets/sets.module';
-import { SetStrength } from './sets/sets-strength.model';
-import { SetCardio } from './sets/sets-cardio.model';
 import { Workout } from './workouts/workouts.model';
 import { FilesModule } from './files/files.module';
 import { ExContent } from './exercises/ex-contents.model';
+import { WorkoutSet } from './workouts/workout-sets.model';
 
 @Module({
   imports: [
@@ -41,9 +39,8 @@ import { ExContent } from './exercises/ex-contents.model';
         Exercise,
         ExGroup,
         Workout,
-        SetStrength,
-        SetCardio,
         ExContent,
+        WorkoutSet,
       ],
       autoLoadModels: true,
     }),
@@ -52,7 +49,6 @@ import { ExContent } from './exercises/ex-contents.model';
     ExercisesModule,
     ExGroupsModule,
     WorkoutsModule,
-    SetsModule,
     FilesModule,
   ],
   providers: [

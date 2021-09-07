@@ -29,7 +29,7 @@ export class UsersController {
     return await this.usersService.create({ ...userDto, code });
   }
 
-  @ApiOperation({ summary: 'Creating a user' })
+  @ApiOperation({ summary: 'Adding role to user by code' })
   @ApiResponse({ status: HttpStatus.ACCEPTED, type: User })
   @Patch('/add-role')
   async addRole(@Body('role') role: string, @Query('code') code: string) {
