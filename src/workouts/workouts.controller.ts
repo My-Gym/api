@@ -14,6 +14,7 @@ import { Workout } from './workouts.model';
 import { BodyCreateWorkoutDto } from './dto/create-workout.dto';
 import { WorkoutsService } from './workouts.service';
 import { BodyCreateWorkoutSetsDto } from './dto/add-sets-workout.dto';
+import { BodyUpdateWorkoutSetsDto } from './dto/update-sets-workout.dto';
 
 @ApiTags('Workouts')
 @Controller('workouts')
@@ -57,13 +58,18 @@ export class WorkoutsController {
     return this.workoutService.findAllPersonal(code);
   }
 
-  @ApiOperation({ summary: 'Getting personal workouts' })
-  @ApiResponse({ status: HttpStatus.OK, type: [Workout] })
-  @Get('/get-personal/:id')
-  async getOnePersonal(
-    @Param('id') id: number,
+  @ApiOperation({ summary: 'Updating personal workout sets by workout id' })
+  @ApiResponse({ status: HttpStatus.ACCEPTED, type: Workout })
+  @Patch('/update-personal-sets/:workoutId')
+  async updatePersonalSets(
+    @Param('workoutId') workoutId: number,
+    @Body() dto: BodyUpdateWorkoutSetsDto,
     @Query('code') code: string,
   ): Promise<Workout> {
-    return this.workoutService.findOnePersonal(id, code);
+    return this.workoutService.updatePersonalSets({
+      ...dto,
+      userCode: code,
+      workoutId,
+    });
   }
 }

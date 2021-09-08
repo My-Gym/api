@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
-export class WorkoutSetsDto {
+class WorkoutSetsForCreateDto {
   planTime?: number;
   planWeight?: number;
   planRepetitions?: number;
@@ -9,8 +9,7 @@ export class WorkoutSetsDto {
 
 export class BodyCreateWorkoutSetsDto {
   @ApiProperty({ example: '[{ planTime: 10 }, ...]', description: 'Data sets' })
-  @IsString({ message: 'Должно быть строкой' })
-  sets: WorkoutSetsDto[];
+  sets: WorkoutSetsForCreateDto[];
 
   @ApiProperty({ example: 10, description: 'Workout Id' })
   @IsNumber({}, { message: 'Должно быть числом' })

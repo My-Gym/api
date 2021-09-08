@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import * as Bluebird from 'bluebird';
 import { Workout } from './workouts.model';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { User } from '../users/users.model';
@@ -7,6 +8,7 @@ import { DeleteWorkoutDto } from './dto/delete-workout.dto';
 import { UsersService } from '../users/users.service';
 import { CreateWorkoutSetsDto } from './dto/add-sets-workout.dto';
 import { WorkoutSet } from './workout-sets.model';
+import { UpdateWorkoutSetsDto } from './dto/update-sets-workout.dto';
 
 @Injectable()
 export class WorkoutsService {
@@ -60,6 +62,22 @@ export class WorkoutsService {
     });
   }
 
+  async addSets(dto: CreateWorkoutSetsDto): Promise<Workout> {
+    const workout = await this.findOnePersonal(dto.workoutId, dto.userCode);
+    const preparationSets = dto.sets.map((set) => ({
+      ...set,
+      workoutId: dto.workoutId,
+    }));
+
+    const workoutSets = await this.workoutSetRepository.bulkCreate(
+      preparationSets,
+    );
+
+    await workout.$add('workoutSets', workoutSets);
+
+    return await this.findOnePersonal(dto.workoutId, dto.userCode);
+  }
+
   async findOnePersonal(workoutId: number, userCode: string): Promise<Workout> {
     const user = await this.userService.getByCode(userCode);
 
@@ -72,7 +90,10 @@ export class WorkoutsService {
     });
 
     if (!workout) {
-      throw new HttpException('Тренировка не найдена!', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        `Тренировка с id: ${workoutId} - не найдена!`,
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return workout;
@@ -87,18 +108,27 @@ export class WorkoutsService {
     });
   }
 
-  async addSets(dto: CreateWorkoutSetsDto): Promise<Workout> {
+  async updatePersonalSets(dto: UpdateWorkoutSetsDto): Promise<Workout> {
     const workout = await this.findOnePersonal(dto.workoutId, dto.userCode);
-    const preparationSets = dto.sets.map((set) => ({
-      ...set,
-      workoutId: dto.workoutId,
-    }));
 
-    const workoutSets = await this.workoutSetRepository.bulkCreate(
-      preparationSets,
-    );
+    await Bluebird.map(dto.sets, async (set) => {
+      const foundSet = await this.workoutSetRepository.findOne({
+        where: {
+          id: set.id,
+          workoutId: workout.id,
+        },
+      });
 
-    await workout.$add('workoutSets', workoutSets);
+      if (!foundSet) {
+        throw new HttpException(
+          `Подход с id: ${set.id} - не найден!`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      await foundSet.update(set);
+      await foundSet.save();
+    });
 
     return await this.findOnePersonal(dto.workoutId, dto.userCode);
   }
