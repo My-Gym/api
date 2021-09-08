@@ -53,7 +53,17 @@ export class WorkoutsController {
   @ApiOperation({ summary: 'Getting personal workouts' })
   @ApiResponse({ status: HttpStatus.OK, type: [Workout] })
   @Get('/get-personal')
-  async getPersonal(@Query('code') code: string): Promise<Workout[]> {
+  async getAllPersonal(@Query('code') code: string): Promise<Workout[]> {
     return this.workoutService.findAllPersonal(code);
+  }
+
+  @ApiOperation({ summary: 'Getting personal workouts' })
+  @ApiResponse({ status: HttpStatus.OK, type: [Workout] })
+  @Get('/get-personal/:id')
+  async getOnePersonal(
+    @Param('id') id: number,
+    @Query('code') code: string,
+  ): Promise<Workout> {
+    return this.workoutService.findOnePersonal(id, code);
   }
 }

@@ -60,10 +60,12 @@ export class WorkoutsService {
     });
   }
 
-  async findOnePersonal(workoutId: number, userId: number): Promise<Workout> {
+  async findOnePersonal(workoutId: number, userCode: string): Promise<Workout> {
+    const user = await this.userService.getByCode(userCode);
+
     const workout = await this.workoutRepository.findOne({
       where: {
-        userId,
+        userId: user.id,
         id: workoutId,
       },
       include: WorkoutSet,
@@ -76,10 +78,17 @@ export class WorkoutsService {
     return workout;
   }
 
-  async addSets(dto: CreateWorkoutSetsDto): Promise<Workout> {
-    const user = await this.userService.getByCode(dto.userCode);
+  async findAllPersonal(userCode: string): Promise<Workout[]> {
+    const user = await this.userService.getByCode(userCode);
 
-    const workout = await this.findOnePersonal(dto.workoutId, user.id);
+    return await this.workoutRepository.findAll({
+      where: { userId: user.id },
+      include: WorkoutSet,
+    });
+  }
+
+  async addSets(dto: CreateWorkoutSetsDto): Promise<Workout> {
+    const workout = await this.findOnePersonal(dto.workoutId, dto.userCode);
     const preparationSets = dto.sets.map((set) => ({
       ...set,
       workoutId: dto.workoutId,
@@ -91,15 +100,6 @@ export class WorkoutsService {
 
     await workout.$add('workoutSets', workoutSets);
 
-    return await this.findOnePersonal(dto.workoutId, user.id);
-  }
-
-  async findAllPersonal(userCode: string): Promise<Workout[]> {
-    const user = await this.userService.getByCode(userCode);
-
-    return await this.workoutRepository.findAll({
-      where: { userId: user.id },
-      include: WorkoutSet,
-    });
+    return await this.findOnePersonal(dto.workoutId, dto.userCode);
   }
 }
