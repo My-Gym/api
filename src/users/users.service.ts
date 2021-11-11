@@ -27,7 +27,7 @@ export class UsersService {
       const roleUser = await this.roleService.getRoleByValue('USER');
       const roles = [roleUser.id];
 
-      if (Number(externalId) === 101271861) {
+      if (dto.code === `101271861_${source}`) {
         const roleAdmin = await this.roleService.getRoleByValue('ADMIN');
         roles.push(roleAdmin.id);
       }
@@ -45,7 +45,7 @@ export class UsersService {
     }
   }
 
-  async addRole(dto: AddRoleDto) {
+  async addRole(dto: AddRoleDto): Promise<any> {
     const { role, code } = dto;
 
     const roleObj: Role = await this.roleService.getRoleByValue(role);
