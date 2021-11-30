@@ -7,7 +7,6 @@ export class SecurityGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    console.log('SecurityGuard');
     const req = context.switchToHttp().getRequest();
     const searchParams = req.headers['x-search-params'];
     const launchParams = searchParams.slice(searchParams.indexOf('?') + 1);
